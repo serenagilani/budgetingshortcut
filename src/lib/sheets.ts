@@ -3,7 +3,7 @@ import type { Expense } from "../types.js";
 
 export async function appendExpenseToSheet(expense: Expense) {
   const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
-  const sheetName = process.env.GOOGLE_SHEETS_SHEET_NAME || "Expenses";
+  const sheetName = process.env.GOOGLE_SHEETS_SHEET_NAME;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   let privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
 

@@ -4,3 +4,5 @@ dist
 service-account.json
 *.log
 
+.vercel
+.vscode/

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ExpenseSchema = z.object({
-  amount: z.number().positive(),
+  amount: z.coerce.number().positive(),
   category: z.enum([
     "food",
     "groceries",
@@ -14,9 +14,8 @@ export const ExpenseSchema = z.object({
     "travel",
     "other"
   ]),
-  date: z.string().refine((v: string) => !Number.isNaN(Date.parse(v)), {
-    message: "date must be an ISO8601 date string",
-  }),
+  // Expect YYYY-MM-DD
+  date: z.coerce.date().transform(d => d.toISOString().slice(0, 10)),
   merchant: z.string().optional(),
   note: z.string().optional(),
 });

@@ -11,13 +11,20 @@ const systemPrompt = `You are an assistant that extracts expense data from a sho
 - If merchant is obvious (e.g., a store or restaurant), include it.
 - Do not include any explanations or additional text, only JSON.`;
 
+function toYmd(date: Date): string {
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 export async function parseExpense(text: string, now: Date = new Date()): Promise<Expense> {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is not set");
   }
 
-  const todayIso = now.toISOString();
-  const userPrompt = `Message: ${text}\nToday (ISO): ${todayIso}`;
+  const today = toYmd(now);
+  const userPrompt = `Message: ${text}\nToday (YYYY-MM-DD): ${today}`;
 
   // Use chat completions and enforce JSON output. We'll validate with Zod.
   const completion = await client.chat.completions.create({
@@ -44,7 +51,7 @@ export async function parseExpense(text: string, now: Date = new Date()): Promis
 
   // Fill default date if missing
   const withDefaults = {
-    date: todayIso,
+    date: today,
     ...((raw as Record<string, unknown>) || {}),
   };
 
